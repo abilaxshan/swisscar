@@ -191,4 +191,40 @@ document.addEventListener('keydown', function(e) {
         }
     }
 });
+
+
+
+// Hero video fallback and animations
+document.addEventListener('DOMContentLoaded', function() {
+    // Video fallback handling
+    const heroVideo = document.querySelector('.hero-video');
+    const videoContainer = document.querySelector('.hero-video-container');
+    
+    if (heroVideo) {
+        heroVideo.addEventListener('error', function() {
+            videoContainer.classList.add('fallback');
+        });
+        
+        // Check if video can play
+        heroVideo.addEventListener('canplay', function() {
+            videoContainer.classList.remove('fallback');
+        });
+    }
+    
+    // Smooth scroll for buttons
+    document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+        anchor.addEventListener('click', function (e) {
+            e.preventDefault();
+            const target = document.querySelector(this.getAttribute('href'));
+            if (target) {
+                target.scrollIntoView({
+                    behavior: 'smooth',
+                    block: 'start'
+                });
+            }
+        });
+    });
+});
+
+
 });

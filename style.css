@@ -221,7 +221,6 @@ header {
 }
 
 /* About Section */
-/* About Section */
 .about {
     background-color: var(--light);
 }
@@ -316,12 +315,16 @@ header {
     height: 100%;
     display: flex;
     flex-direction: column;
+    border: 2px solid transparent;
 }
 
 /* Effect 1: Card Lift with Shadow */
 .service-card:hover {
     transform: translateY(-15px);
     box-shadow: 0 20px 30px rgba(0, 0, 0, 0.15);
+    /* Yellow Hover Effect */
+    background: linear-gradient(135deg, #fef9e7 0%, #fef3cd 100%);
+    border: 2px solid #f1c40f;
 }
 
 /* Effect 2: Icon Animation */
@@ -401,6 +404,7 @@ header {
 
 .service-card:hover .service-content h3 {
     transform: translateX(10px);
+    color: #d35400; /* Yellow hover text color */
 }
 
 .service-content p {
@@ -409,6 +413,10 @@ header {
     transition: all 0.3s ease 0.1s;
     opacity: 1;
     transform: translateY(0);
+}
+
+.service-card:hover .service-content p {
+    color: #7d6608; /* Yellow hover text color */
 }
 
 /* Effect 4: Learn More Button */
@@ -441,6 +449,17 @@ header {
 .service-btn:hover {
     background-color: var(--primary);
     color: var(--secondary);
+}
+
+.service-card:hover .service-btn {
+    background-color: #f1c40f;
+    color: #000;
+    border-color: #f1c40f;
+}
+
+.service-card:hover .service-btn:hover {
+    background-color: #d35400;
+    color: white;
 }
 
 /* Effect 5: Background Pattern on Hover */
