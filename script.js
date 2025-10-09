@@ -172,6 +172,8 @@ window.addEventListener('load', () => {
     // Enhanced Services Section Interactivity
 const serviceCards = document.querySelectorAll('.service-card');
 
+
+
 // Add click effect to service cards
 serviceCards.forEach(card => {
     card.addEventListener('click', function() {
@@ -192,39 +194,159 @@ document.addEventListener('keydown', function(e) {
     }
 });
 
+// Pricing Modal Functionality
+const pricingModal = document.getElementById('pricingModal');
+const comparisonPopup = document.getElementById('comparisonPopup');
+const offerPopup = document.getElementById('offerPopup');
 
-
-// Hero video fallback and animations
-document.addEventListener('DOMContentLoaded', function() {
-    // Video fallback handling
-    const heroVideo = document.querySelector('.hero-video');
-    const videoContainer = document.querySelector('.hero-video-container');
-    
-    if (heroVideo) {
-        heroVideo.addEventListener('error', function() {
-            videoContainer.classList.add('fallback');
-        });
-        
-        // Check if video can play
-        heroVideo.addEventListener('canplay', function() {
-            videoContainer.classList.remove('fallback');
-        });
+// Pricing data for modals
+const pricingData = {
+    'single-lesson': {
+        title: 'Single Driving Lesson',
+        price: 'CHF 85',
+        features: 'Perfect for trying out our teaching style or getting some extra practice.',
+        benefits: [
+            '60-minute personalized session',
+            'Professional certified instructor',
+            'Modern training vehicle',
+            'Flexible scheduling',
+            'Basic theory introduction'
+        ]
+    },
+    '10-lesson-package': {
+        title: '10-Lesson Package',
+        price: 'CHF 790',
+        features: 'Our most popular package for comprehensive driving education.',
+        benefits: [
+            '10 x 60-minute sessions',
+            'Complete theory materials',
+            'Practice test simulations',
+            'Progress tracking system',
+            'Priority scheduling',
+            'Road safety workshop'
+        ]
+    },
+    'complete-course': {
+        title: 'Complete Driving Course',
+        price: 'CHF 1,450',
+        features: 'Everything you need to become a confident, licensed driver.',
+        benefits: [
+            '20 lessons + exam preparation',
+            'Full theory course included',
+            'Mock driving test',
+            'Exam booking assistance',
+            'Certificate of completion',
+            '1-year post-license support',
+            'Defensive driving techniques'
+        ]
     }
-    
-    // Smooth scroll for buttons
-    document.querySelectorAll('a[href^="#"]').forEach(anchor => {
-        anchor.addEventListener('click', function (e) {
-            e.preventDefault();
-            const target = document.querySelector(this.getAttribute('href'));
-            if (target) {
-                target.scrollIntoView({
-                    behavior: 'smooth',
-                    block: 'start'
-                });
-            }
-        });
+};
+
+// Open pricing modal
+document.querySelectorAll('.pricing-card').forEach(card => {
+    card.addEventListener('click', function() {
+        const packageType = this.querySelector('h4').textContent.toLowerCase();
+        openPricingModal(packageType);
     });
 });
+
+function openPricingModal(packageType) {
+    const data = getPricingData(packageType);
+    
+    document.getElementById('modalTitle').textContent = data.title;
+    document.getElementById('modalPrice').textContent = data.price;
+    document.getElementById('modalFeatures').innerHTML = `<p>${data.features}</p>`;
+    
+    const benefitsList = document.getElementById('modalBenefits');
+    benefitsList.innerHTML = '';
+    data.benefits.forEach(benefit => {
+        const li = document.createElement('li');
+        li.textContent = benefit;
+        benefitsList.appendChild(li);
+    });
+    
+    pricingModal.classList.add('active');
+}
+
+function getPricingData(packageType) {
+    if (packageType.includes('single')) return pricingData['single-lesson'];
+    if (packageType.includes('10-lesson') || packageType.includes('package')) return pricingData['10-lesson-package'];
+    if (packageType.includes('complete')) return pricingData['complete-course'];
+    return pricingData['single-lesson'];
+}
+
+// Close modals
+document.querySelectorAll('.close-modal, .modal-close-btn, .comparison-close, .offer-close').forEach(btn => {
+    btn.addEventListener('click', closeAllModals);
+});
+
+function closeAllModals() {
+    pricingModal.classList.remove('active');
+    comparisonPopup.classList.remove('active');
+    offerPopup.classList.remove('active');
+}
+
+// Close on outside click
+window.addEventListener('click', (e) => {
+    if (e.target === pricingModal) closeAllModals();
+    if (e.target === comparisonPopup) closeAllModals();
+    if (e.target === offerPopup) closeAllModals();
+});
+
+// Comparison functionality
+document.querySelector('.comparison-btn').addEventListener('click', () => {
+    comparisonPopup.classList.add('active');
+});
+
+// Special offer timer
+function startOfferTimer() {
+    let hours = 24;
+    let minutes = 59;
+    let seconds = 59;
+    
+    const timer = setInterval(() => {
+        document.getElementById('offerHours').textContent = hours.toString().padStart(2, '0');
+        document.getElementById('offerMinutes').textContent = minutes.toString().padStart(2, '0');
+        document.getElementById('offerSeconds').textContent = seconds.toString().padStart(2, '0');
+        
+        if (seconds > 0) {
+            seconds--;
+        } else {
+            if (minutes > 0) {
+                minutes--;
+                seconds = 59;
+            } else {
+                if (hours > 0) {
+                    hours--;
+                    minutes = 59;
+                    seconds = 59;
+                } else {
+                    clearInterval(timer);
+                    offerPopup.classList.remove('active');
+                }
+            }
+        }
+    }, 1000);
+}
+
+// Show offer popup after 5 seconds
+setTimeout(() => {
+    offerPopup.classList.add('active');
+    startOfferTimer();
+}, 5000);
+
+// Book buttons
+document.querySelectorAll('.modal-book-btn, .offer-claim').forEach(btn => {
+    btn.addEventListener('click', function() {
+        closeAllModals();
+        // Scroll to contact form
+        document.getElementById('contact').scrollIntoView({ behavior: 'smooth' });
+        // Show success message
+        showTrafficNotification('Ready to Book!', 'Please fill out the contact form and we will get back to you shortly!');
+    });
+});
+
+
 
 
 });

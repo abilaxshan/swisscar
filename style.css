@@ -185,7 +185,7 @@ header {
 
 /* Hero Section */
 .hero {
-    background: linear-gradient(rgba(0, 0, 0, 0.7), rgba(0, 0, 0, 0.7)), url('images/hero.jpg');
+    background: linear-gradient(rgba(0, 0, 0, 0.7), rgba(0, 0, 0, 0.7)), url('images/hero1.jpg');
     background-size: cover;
     background-position: center;
     background-attachment: fixed;
@@ -194,11 +194,15 @@ header {
     align-items: center;
     color: var(--secondary);
     text-align: center;
+    position: relative;
+    overflow: hidden;
 }
 
 .hero-content {
     max-width: 800px;
     margin: 0 auto;
+    position: relative;
+    z-index: 2;
 }
 
 .hero h1 {
@@ -218,6 +222,29 @@ header {
     gap: 20px;
     justify-content: center;
     flex-wrap: wrap;
+}
+
+/* Road Lines Animation */
+.road-lines {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    height: 40px;
+    background: repeating-linear-gradient(
+        90deg,
+        transparent,
+        transparent 20px,
+        var(--accent) 20px,
+        var(--accent) 40px
+    );
+    animation: roadMove 1s linear infinite;
+    z-index: 1;
+}
+
+@keyframes roadMove {
+    0% { transform: translateX(0); }
+    100% { transform: translateX(-40px); }
 }
 
 /* About Section */
@@ -296,9 +323,7 @@ header {
     }
 }
 
-
-/* Services Section */
-/* Enhanced Services Section */
+/* Services Section - Updated with consistent red colors */
 .services-grid {
     display: grid;
     grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
@@ -327,7 +352,7 @@ header {
     border: 2px solid #f1c40f;
 }
 
-/* Effect 2: Icon Animation */
+/* Effect 2: Icon Animation - All red */
 .service-icon {
     background: linear-gradient(135deg, var(--primary), #b32015);
     color: var(--secondary);
@@ -482,33 +507,35 @@ header {
     opacity: 1;
 }
 
-/* Effect 6: Individual Card Color Variations */
-.service-card:nth-child(1):hover .service-icon {
-    background: linear-gradient(135deg, #d52b1e, #b32015);
+/* Effect 6: All cards have red icons (removed individual color variations) */
+.service-card:hover .service-icon {
+    background: linear-gradient(135deg, var(--primary), #b32015);
 }
 
-.service-card:nth-child(2):hover .service-icon {
-    background: linear-gradient(135deg, #2b6fd5, #1e5bb3);
+/* Gear shift animation for service cards */
+.service-card::after {
+    content: '';
+    position: absolute;
+    bottom: -30px;
+    right: -30px;
+    font-size: 4rem;
+    opacity: 0.1;
+    transition: all 0.3s ease;
 }
 
-.service-card:nth-child(3):hover .service-icon {
-    background: linear-gradient(135deg, #2bd569, #1eb352);
+.service-card:nth-child(1)::after { content: '🚗'; }
+.service-card:nth-child(2)::after { content: '🚚'; }
+.service-card:nth-child(3)::after { content: '🏍️'; }
+.service-card:nth-child(4)::after { content: '❄️'; }
+.service-card:nth-child(5)::after { content: '🛡️'; }
+.service-card:nth-child(6)::after { content: '🔄'; }
+
+.service-card:hover::after {
+    transform: translate(-20px, -20px) rotate(15deg);
+    opacity: 0.2;
 }
 
-.service-card:nth-child(4):hover .service-icon {
-    background: linear-gradient(135deg, #d52b9e, #b3207a);
-}
-
-.service-card:nth-child(5):hover .service-icon {
-    background: linear-gradient(135deg, #d5a62b, #b38920);
-}
-
-.service-card:nth-child(6):hover .service-icon {
-    background: linear-gradient(135deg, #6f2bd5, #5b1eb3);
-}
-
-
-/* Instructors Section */
+/* Instructors Section - Updated zoom position */
 .instructors {
     background-color: var(--light);
 }
@@ -545,10 +572,11 @@ header {
     height: 100%;
     object-fit: cover;
     transition: all 0.5s ease;
+    transform-origin: center center; /* Better zoom positioning */
 }
 
 .instructor-card:hover .instructor-img {
-    transform: scale(1.1);
+    transform: scale(1.1); /* Reduced zoom for better effect */
 }
 
 /* Add a professional overlay on hover */
@@ -646,28 +674,6 @@ header {
 
 .instructor-card:hover:before {
     transform: scaleX(1);
-}
-
-/* Responsive adjustments */
-@media (max-width: 768px) {
-    .instructors-grid {
-        grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-        gap: 20px;
-    }
-    
-    .instructor-image {
-        height: 250px;
-    }
-    
-    .instructor-info {
-        padding: 20px 15px;
-    }
-}
-
-@media (max-width: 576px) {
-    .instructors-grid {
-        grid-template-columns: 1fr;
-    }
 }
 
 /* Testimonials Section */
@@ -878,6 +884,646 @@ footer {
     font-size: 0.9rem;
 }
 
+/* Traffic Light Notification System */
+.traffic-light-popup {
+    position: fixed;
+    top: 20px;
+    right: 20px;
+    width: 300px;
+    background: white;
+    border-radius: 10px;
+    box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+    padding: 20px;
+    z-index: 10000;
+    transform: translateX(400px);
+    transition: transform 0.5s ease;
+    border-left: 5px solid var(--primary);
+}
+
+.traffic-light-popup.show {
+    transform: translateX(0);
+}
+
+.traffic-light-header {
+    display: flex;
+    align-items: center;
+    margin-bottom: 15px;
+    padding-bottom: 10px;
+    border-bottom: 2px solid var(--light);
+}
+
+.traffic-light {
+    display: flex;
+    gap: 8px;
+    margin-right: 15px;
+}
+
+.light {
+    width: 12px;
+    height: 12px;
+    border-radius: 50%;
+    background: #ccc;
+    transition: all 0.3s ease;
+}
+
+.light.red { background: #ff4757; }
+.light.yellow { background: #ffa502; }
+.light.green { background: #2ed573; }
+
+.traffic-light-popup h4 {
+    margin: 0;
+    color: var(--dark);
+    font-size: 1.1rem;
+}
+
+.traffic-light-popup p {
+    margin: 0;
+    color: var(--gray);
+    font-size: 0.9rem;
+}
+
+.close-popup {
+    position: absolute;
+    top: 10px;
+    right: 15px;
+    background: none;
+    border: none;
+    font-size: 1.2rem;
+    cursor: pointer;
+    color: var(--gray);
+    transition: color 0.3s ease;
+}
+
+.close-popup:hover {
+    color: var(--primary);
+}
+
+/* Driving-themed loading animation */
+.driving-loader {
+    width: 100%;
+    height: 4px;
+    background: var(--light);
+    position: fixed;
+    top: 0;
+    left: 0;
+    z-index: 10001;
+    display: none;
+}
+
+.driving-loader::before {
+    content: '';
+    position: absolute;
+    height: 100%;
+    width: 50px;
+    background: var(--primary);
+    animation: drivingProgress 2s linear infinite;
+}
+
+@keyframes drivingProgress {
+    0% { left: -50px; }
+    100% { left: 100%; }
+}
+
+/* Enhanced Driving Mode Toggle */
+.driving-mode-toggle {
+    position: fixed;
+    bottom: 20px;
+    right: 20px;
+    z-index: 1000;
+    background: none;
+    border: none;
+    cursor: pointer;
+    padding: 0;
+    width: 70px;
+    height: 70px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.toggle-circle {
+    width: 60px;
+    height: 60px;
+    background: rgba(255, 255, 255, 0.95);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
+    transition: all 0.3s ease;
+    border: 3px solid var(--primary);
+}
+
+.driving-mode-toggle:hover .toggle-circle {
+    transform: scale(1.1);
+    background: rgba(240, 240, 240, 0.95);
+    box-shadow: 0 6px 20px rgba(0, 0, 0, 0.4);
+}
+
+.toggle-icon {
+    font-size: 1.8rem;
+    transition: all 0.3s ease;
+}
+
+.driving-mode-toggle:hover .toggle-icon {
+    transform: rotate(15deg);
+}
+
+/* When driving mode is active */
+body.driving-mode .toggle-circle {
+    background: rgba(230, 230, 230, 0.95);
+    border-color: var(--accent);
+    box-shadow: 0 4px 15px rgba(248, 195, 0, 0.4);
+}
+
+body.driving-mode .toggle-icon {
+    content: '🚦';
+}
+
+/* Steering wheel cursor */
+body.driving-mode {
+    cursor: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 32 32"><circle cx="16" cy="16" r="15" fill="none" stroke="%23d52b1e" stroke-width="2"/><circle cx="16" cy="16" r="6" fill="none" stroke="%23d52b1e" stroke-width="2"/><path d="M16 10 L16 22 M10 16 L22 16" stroke="%23d52b1e" stroke-width="2"/></svg>'), auto;
+}
+
+/* Fast scroll effect */
+body.fast-scroll {
+    cursor: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 32 32"><text x="16" y="20" text-anchor="middle" font-size="18" fill="%23d52b1e">🚀</text></svg>'), auto;
+}
+
+/* Pricing Section */
+.pricing {
+    background-color: var(--light);
+    padding: 100px 0;
+}
+
+.pricing-subtitle {
+    text-align: center;
+    max-width: 600px;
+    margin: 0 auto 50px;
+    font-size: 1.1rem;
+    color: var(--gray);
+}
+
+.pricing-grid {
+    display: flex;
+    flex-direction: column;
+    gap: 60px;
+}
+
+.pricing-category {
+    background: var(--secondary);
+    border-radius: 15px;
+    padding: 40px;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.08);
+}
+
+.pricing-category h3 {
+    color: var(--primary);
+    font-size: 1.8rem;
+    margin-bottom: 30px;
+    display: flex;
+    align-items: center;
+    gap: 15px;
+}
+
+.pricing-category h3 i {
+    font-size: 1.5rem;
+}
+
+.pricing-options {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: 30px;
+}
+
+.pricing-card {
+    background: var(--secondary);
+    border: 2px solid #e0e0e0;
+    border-radius: 12px;
+    padding: 30px;
+    transition: all 0.3s ease;
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+}
+
+.pricing-card:hover {
+    border-color: var(--primary);
+    transform: translateY(-5px);
+    box-shadow: 0 15px 30px rgba(0, 0, 0, 0.1);
+}
+
+.pricing-card.popular {
+    border-color: var(--accent);
+    transform: scale(1.05);
+}
+
+.pricing-card.popular:hover {
+    transform: scale(1.05) translateY(-5px);
+}
+
+.popular-badge {
+    position: absolute;
+    top: -12px;
+    left: 50%;
+    transform: translateX(-50%);
+    background: var(--accent);
+    color: var(--dark);
+    padding: 6px 20px;
+    border-radius: 20px;
+    font-size: 0.8rem;
+    font-weight: 600;
+    text-transform: uppercase;
+}
+
+.pricing-header {
+    text-align: center;
+    margin-bottom: 25px;
+    padding-bottom: 20px;
+    border-bottom: 2px solid var(--light);
+}
+
+.pricing-header h4 {
+    color: var(--dark);
+    font-size: 1.3rem;
+    margin-bottom: 15px;
+}
+
+.price {
+    font-size: 2.5rem;
+    font-weight: 700;
+    color: var(--primary);
+    margin-bottom: 10px;
+}
+
+.price span {
+    font-size: 1rem;
+    color: var(--gray);
+    font-weight: 400;
+}
+
+.price-save {
+    color: var(--accent);
+    font-weight: 600;
+    font-size: 0.9rem;
+}
+
+.pricing-features {
+    list-style: none;
+    margin-bottom: 30px;
+    flex-grow: 1;
+}
+
+.pricing-features li {
+    margin-bottom: 12px;
+    display: flex;
+    align-items: flex-start;
+    gap: 10px;
+    color: var(--gray);
+}
+
+.pricing-features i {
+    color: var(--primary);
+    margin-top: 3px;
+    flex-shrink: 0;
+}
+
+.pricing-btn {
+    width: 100%;
+    margin-top: auto;
+}
+
+.pricing-note {
+    text-align: center;
+    margin-top: 50px;
+    padding: 20px;
+    background: var(--secondary);
+    border-radius: 8px;
+    border-left: 4px solid var(--accent);
+}
+
+.pricing-note p {
+    margin: 0;
+    color: var(--gray);
+    font-size: 0.95rem;
+}
+
+/* Pricing Modals and Popups */
+.pricing-modal {
+    display: none;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.8);
+    z-index: 10002;
+    animation: fadeIn 0.3s ease;
+}
+
+.pricing-modal.active {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.modal-content {
+    background: var(--secondary);
+    border-radius: 15px;
+    width: 90%;
+    max-width: 600px;
+    max-height: 90vh;
+    overflow-y: auto;
+    position: relative;
+    animation: slideUp 0.3s ease;
+}
+
+@keyframes slideUp {
+    from { transform: translateY(50px); opacity: 0; }
+    to { transform: translateY(0); opacity: 1; }
+}
+
+.close-modal {
+    position: absolute;
+    top: 15px;
+    right: 20px;
+    font-size: 2rem;
+    cursor: pointer;
+    color: var(--gray);
+    transition: color 0.3s ease;
+}
+
+.close-modal:hover {
+    color: var(--primary);
+}
+
+.modal-header {
+    background: linear-gradient(135deg, var(--primary), #b32015);
+    color: var(--secondary);
+    padding: 30px;
+    border-radius: 15px 15px 0 0;
+    text-align: center;
+}
+
+.modal-header h3 {
+    margin-bottom: 10px;
+    color: var(--secondary);
+}
+
+.modal-price {
+    font-size: 2.5rem;
+    font-weight: 700;
+}
+
+.modal-body {
+    padding: 30px;
+}
+
+.modal-features {
+    margin-bottom: 25px;
+}
+
+.modal-benefits {
+    background: var(--light);
+    padding: 20px;
+    border-radius: 8px;
+    margin-bottom: 25px;
+}
+
+.modal-benefits h4 {
+    color: var(--primary);
+    margin-bottom: 15px;
+}
+
+.modal-benefits ul {
+    list-style: none;
+}
+
+.modal-benefits li {
+    margin-bottom: 8px;
+    padding-left: 25px;
+    position: relative;
+}
+
+.modal-benefits li:before {
+    content: '✓';
+    position: absolute;
+    left: 0;
+    color: var(--primary);
+    font-weight: bold;
+}
+
+.modal-cta {
+    display: flex;
+    gap: 15px;
+    justify-content: center;
+    flex-wrap: wrap;
+}
+
+/* Comparison Popup */
+.comparison-popup {
+    display: none;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.9);
+    z-index: 10003;
+    align-items: center;
+    justify-content: center;
+}
+
+.comparison-popup.active {
+    display: flex;
+}
+
+.comparison-content {
+    background: var(--secondary);
+    border-radius: 15px;
+    padding: 30px;
+    width: 95%;
+    max-width: 1000px;
+    max-height: 90vh;
+    overflow-y: auto;
+}
+
+.comparison-content h4 {
+    color: var(--primary);
+    text-align: center;
+    margin-bottom: 25px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+}
+
+.comparison-table {
+    overflow-x: auto;
+    margin-bottom: 25px;
+}
+
+.comparison-table table {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+.comparison-table th,
+.comparison-table td {
+    padding: 15px;
+    text-align: center;
+    border: 1px solid #e0e0e0;
+}
+
+.comparison-table th {
+    background: var(--primary);
+    color: var(--secondary);
+    font-weight: 600;
+}
+
+.comparison-table tr:nth-child(even) {
+    background: var(--light);
+}
+
+.comparison-table .feature-cell {
+    text-align: left;
+    font-weight: 600;
+    background: var(--light);
+}
+
+/* Special Offer Popup */
+.offer-popup {
+    display: none;
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    background: linear-gradient(135deg, var(--primary), var(--accent));
+    color: var(--secondary);
+    padding: 30px;
+    border-radius: 15px;
+    box-shadow: 0 20px 50px rgba(0, 0, 0, 0.3);
+    z-index: 10004;
+    max-width: 400px;
+    width: 90%;
+    text-align: center;
+    animation: bounceIn 0.6s ease;
+}
+
+@keyframes bounceIn {
+    0% { transform: translate(-50%, -50%) scale(0.3); }
+    50% { transform: translate(-50%, -50%) scale(1.05); }
+    100% { transform: translate(-50%, -50%) scale(1); }
+}
+
+.offer-popup.active {
+    display: block;
+}
+
+.offer-badge {
+    background: var(--secondary);
+    color: var(--primary);
+    padding: 8px 20px;
+    border-radius: 20px;
+    font-weight: 700;
+    font-size: 0.9rem;
+    display: inline-block;
+    margin-bottom: 15px;
+    animation: pulse 2s infinite;
+}
+
+@keyframes pulse {
+    0% { transform: scale(1); }
+    50% { transform: scale(1.05); }
+    100% { transform: scale(1); }
+}
+
+.offer-popup h4 {
+    color: var(--secondary);
+    margin-bottom: 15px;
+    font-size: 1.5rem;
+}
+
+.offer-popup p {
+    margin-bottom: 20px;
+    opacity: 0.9;
+}
+
+.offer-timer {
+    display: flex;
+    justify-content: center;
+    gap: 15px;
+    margin-bottom: 25px;
+}
+
+.timer-item {
+    background: rgba(255, 255, 255, 0.2);
+    padding: 10px;
+    border-radius: 8px;
+    min-width: 60px;
+}
+
+.timer-item span {
+    font-size: 1.8rem;
+    font-weight: 700;
+    display: block;
+}
+
+.timer-item small {
+    font-size: 0.8rem;
+    opacity: 0.8;
+}
+
+.offer-actions {
+    display: flex;
+    gap: 10px;
+    justify-content: center;
+    flex-wrap: wrap;
+}
+
+/* Pricing Card Enhancements */
+.pricing-card {
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.pricing-card:hover {
+    transform: translateY(-10px);
+    box-shadow: 0 20px 40px rgba(0, 0, 0, 0.15);
+}
+
+.pricing-card .pricing-btn {
+    transition: all 0.3s ease;
+}
+
+.pricing-card:hover .pricing-btn {
+    background: var(--primary);
+    color: var(--secondary);
+}
+
+.comparison-trigger {
+    text-align: center;
+    margin-top: 30px;
+}
+
+.comparison-btn {
+    background: transparent;
+    border: 2px solid var(--primary);
+    color: var(--primary);
+    padding: 10px 20px;
+    border-radius: 25px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    font-weight: 600;
+}
+
+.comparison-btn:hover {
+    background: var(--primary);
+    color: var(--secondary);
+    transform: translateY(-2px);
+}
+
 /* Responsive Styles */
 @media (max-width: 992px) {
     h1 {
@@ -903,6 +1549,23 @@ footer {
     
     .hero-buttons .btn {
         width: 200px;
+    }
+    
+    .traffic-light-popup {
+        width: 280px;
+        right: 10px;
+    }
+    
+    .pricing-options {
+        grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    }
+    
+    .pricing-card.popular {
+        transform: scale(1);
+    }
+    
+    .pricing-card.popular:hover {
+        transform: translateY(-5px);
     }
 }
 
@@ -945,6 +1608,36 @@ footer {
     .hero {
         background-attachment: scroll;
     }
+    
+    .traffic-light-popup {
+        width: calc(100% - 40px);
+        right: 20px;
+    }
+    
+    .pricing-category {
+        padding: 30px 20px;
+    }
+    
+    .pricing-options {
+        grid-template-columns: 1fr;
+    }
+    
+    .price {
+        font-size: 2.2rem;
+    }
+    
+    .instructors-grid {
+        grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+        gap: 20px;
+    }
+    
+    .instructor-image {
+        height: 250px;
+    }
+    
+    .instructor-info {
+        padding: 20px 15px;
+    }
 }
 
 @media (max-width: 576px) {
@@ -971,5 +1664,38 @@ footer {
     
     .instructors-grid {
         grid-template-columns: 1fr;
+    }
+    
+    .traffic-light-popup {
+        width: calc(100% - 20px);
+        right: 10px;
+    }
+    
+    .driving-mode-toggle {
+        bottom: 15px;
+        right: 15px;
+        width: 60px;
+        height: 60px;
+    }
+    
+    .toggle-circle {
+        width: 50px;
+        height: 50px;
+    }
+    
+    .toggle-icon {
+        font-size: 1.5rem;
+    }
+    
+    .pricing {
+        padding: 80px 0;
+    }
+    
+    .pricing-category h3 {
+        font-size: 1.5rem;
+    }
+    
+    .pricing-card {
+        padding: 25px 20px;
     }
 }
